@@ -1,3 +1,6 @@
+// mpstk - the Multiparty Session Types toolKit
+// Copyright 2018 Alceste Scalas <alceste.scalas @ imperial.ac.uk>
+// Released under the MIT License: https://opensource.org/licenses/MIT
 package mpstk.parser
 
 import scala.util.parsing.combinator._
@@ -15,6 +18,8 @@ protected[parser] case class ParserConfig[A, PC <: BasePayloadCont[A]](
   endCont: A
 )
 
+/** Base parser trait with common syntactic elements. */
+protected[parser]
 abstract trait BaseParser extends RegexParsers {
   def comment: Parser[String] = """(?m)#.*$""".r
   def comments: Parser[Unit] = rep(comment) ^^ { _ => () }

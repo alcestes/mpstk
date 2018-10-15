@@ -1,6 +1,6 @@
 %%% Liveness: any pending input/output can always be eventually triggered
 %%%
-%%% Copyright 2018 Alceste Scalas <alceste.scalas@imperial.ac.uk>
+%%% Copyright 2018 Alceste Scalas <alceste.scalas @ imperial.ac.uk>
 %%% Released under the MIT License: https://opensource.org/licenses/MIT
 
 nu Z.(forall s1: Session, r1,r2: Role .

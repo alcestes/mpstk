@@ -1,3 +1,6 @@
+// mpstk - the Multiparty Session Types toolKit
+// Copyright 2018 Alceste Scalas <alceste.scalas @ imperial.ac.uk>
+// Released under the MIT License: https://opensource.org/licenses/MIT
 package mpstk.raw
 
 import mpstk.{Channel, Label, Role, Session, Type, GroundType, ContextImpl}

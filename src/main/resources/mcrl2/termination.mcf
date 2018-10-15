@@ -2,7 +2,7 @@
 %%% input/output/communication transitions is always reached, after a
 %%% finite number of communications
 %%%
-%%% Copyright 2018 Alceste Scalas <alceste.scalas@imperial.ac.uk>
+%%% Copyright 2018 Alceste Scalas <alceste.scalas @ imperial.ac.uk>
 %%% Released under the MIT License: https://opensource.org/licenses/MIT
 
 mu X.(

@@ -1,7 +1,7 @@
 %%% Never-termination: all states reachable via communication transitions
 %%% can perform further communications
 %%%
-%%% Copyright 2018 Alceste Scalas <alceste.scalas@imperial.ac.uk>
+%%% Copyright 2018 Alceste Scalas <alceste.scalas @ imperial.ac.uk>
 %%% Released under the MIT License: https://opensource.org/licenses/MIT
 nu X.(
   (exists s1: Session, r1,r2: Role, m1: Message, p1: Payload .

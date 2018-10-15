@@ -1,6 +1,9 @@
+// mpstk - the Multiparty Session Types toolKit
+// Copyright 2018 Alceste Scalas <alceste.scalas @ imperial.ac.uk>
+// Released under the MIT License: https://opensource.org/licenses/MIT
 package mpstk
 
-// Operations
+/** Implementation of most operations on session types and global types */
 package object ops {
   /** Barendregt convention: return a MPST with unique recursion vars */
   def barendregt(t: MPST): MPST = impl.barendregt(t, Set.empty)._1

@@ -7,7 +7,7 @@
 ###   for Safe Distributed Programming.
 ###   ECOOP'17 - http://dx.doi.org/10.4230/LIPIcs.ECOOP.2017.24
 ###
-### Copyright 2018 Alceste Scalas <alceste.scalas@imperial.ac.uk>
+### Copyright 2018 Alceste Scalas <alceste.scalas @ imperial.ac.uk>
 ### Released under the MIT License: https://opensource.org/licenses/MIT
 
 b→c:InfoBC(String) . c→a:InfoCA(String) . a→b:InfoAB(String) .

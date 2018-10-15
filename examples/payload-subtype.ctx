@@ -1,7 +1,7 @@
 ### A simple protocol where p sends a message to q, carrying a payload
 ### that is a subtype of what q expects.
 ###
-### Copyright 2018 Alceste Scalas <alceste.scalas@imperial.ac.uk>
+### Copyright 2018 Alceste Scalas <alceste.scalas @ imperial.ac.uk>
 ### Released under the MIT License: https://opensource.org/licenses/MIT
 
 s[p]: q⊕m(μ(t)r&m1.t) . end,

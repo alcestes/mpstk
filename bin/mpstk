@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Wrapper script for launching mpstk tools
 #
-# Copyright 2018 Alceste Scalas <alceste.scalas@imperial.ac.uk>
+# Copyright 2018 Alceste Scalas <alceste.scalas @ imperial.ac.uk>
 # Released under the MIT License: https://opensource.org/licenses/MIT
 
 # The following code for automatic rebuilding is adapted from:

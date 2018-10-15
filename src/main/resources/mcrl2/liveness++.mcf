@@ -1,7 +1,8 @@
 %%% Liveness++: each enabled input/output action will meet a
-%%% corresponding output/input, within a finite number of reductions
+%%% corresponding output/input, and enable a corresponding
+%%% synchronisation, within a finite number of reductions
 %%%
-%%% Copyright 2018 Alceste Scalas <alceste.scalas@imperial.ac.uk>
+%%% Copyright 2018 Alceste Scalas <alceste.scalas @ imperial.ac.uk>
 %%% Released under the MIT License: https://opensource.org/licenses/MIT
 
 nu Z.(forall s1: Session, r1,r2: Role .

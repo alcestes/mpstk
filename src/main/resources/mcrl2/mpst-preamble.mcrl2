@@ -1,6 +1,6 @@
 %%% Representation of multiparty session type contexts as mCRL2 processes
 %%%
-%%% Copyright 2018 Alceste Scalas <alceste.scalas@imperial.ac.uk>
+%%% Copyright 2018 Alceste Scalas <alceste.scalas @ imperial.ac.uk>
 %%% Released under the MIT License: https://opensource.org/licenses/MIT
 
 %%% Sessions

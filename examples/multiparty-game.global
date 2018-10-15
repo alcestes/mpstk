@@ -1,0 +1,17 @@
+### Multiparty game.
+###
+### This is Example 2.18 (and the main example) of the paper:
+###
+### Alceste Scalas, Ornela Dardha, Raymond Hu, Nobuko Yoshida.
+###   A Linear Decomposition of Multiparty Sessions
+###   for Safe Distributed Programming.
+###   ECOOP'17 - http://dx.doi.org/10.4230/LIPIcs.ECOOP.2017.24
+###
+### Copyright 2018 Alceste Scalas <alceste.scalas@imperial.ac.uk>
+### Released under the MIT License: https://opensource.org/licenses/MIT
+
+b→c:InfoBC(String) . c→a:InfoCA(String) . a→b:InfoAB(String) .
+  μ(t)a→b:{
+    Mov1AB(Int)  . b→c:Mov1BC(Int)  . c→a: { Mov1CA(Int).t, Mov2CA(Bool).t },
+    Mov2AB(Bool) . b→c:Mov2BC(Bool) . c→a: { Mov1CA(Int).t, Mov2CA(Bool).t }
+  }

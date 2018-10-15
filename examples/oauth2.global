@@ -1,0 +1,9 @@
+### Authorization protocol fragment, based on OAuth2 (RFC 6749).
+###
+### Copyright 2018 Alceste Scalas <alceste.scalas@imperial.ac.uk>
+### Released under the MIT License: https://opensource.org/licenses/MIT
+
+server→client:{
+  login  . client→auth:passwd(Str) . auth→server:auth(Bool) . end,
+  cancel . client→auth:quit . end
+}

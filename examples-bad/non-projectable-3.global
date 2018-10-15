@@ -1,0 +1,6 @@
+μ(t)(
+  a→b:{
+    m1 . b→c:m1(int) . t,
+    m2 . b→c:m1(bool) . t
+  }
+)

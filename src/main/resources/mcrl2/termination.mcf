@@ -1,0 +1,23 @@
+%%% Termination: a final state without further
+%%% input/output/communication transitions is always reached, after a
+%%% finite number of communications
+%%%
+%%% Copyright 2018 Alceste Scalas <alceste.scalas@imperial.ac.uk>
+%%% Released under the MIT License: https://opensource.org/licenses/MIT
+
+mu X.(
+  (
+    (
+      forall s1: Session, r1,r2: Role, m1: Message, p1: Payload .
+        [t(s1, r1, r2, m1, p1)]false
+    ) => (
+      forall s1: Session, r1,r2: Role, m1: Message, p1: Payload .
+        [i(s1, r1, r2, m1, p1)]false && [o(s1, r1, r2, m1, p1)]false
+    )
+  )
+  &&
+  (
+    forall s1: Session, r1,r2: Role, m1: Message, p1: Payload .
+      [t(s1, r1, r2, m1, p1)]X
+  )
+)

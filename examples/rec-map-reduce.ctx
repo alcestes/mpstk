@@ -1,0 +1,55 @@
+### Recursive map/reduce protocol.
+###
+### Copyright 2018 Alceste Scalas <alceste.scalas@imperial.ac.uk>
+### Released under the MIT License: https://opensource.org/licenses/MIT
+
+s[mapper]: μ(t)(
+             worker1⊕datum(Int) .
+             worker2⊕datum(Int) .
+             worker3⊕datum(Int) .
+             reducer&{
+               continue(Int) . t,
+               stop . (
+                 worker1⊕stop .
+                 worker2⊕stop .
+                 worker3⊕stop
+               )
+             }
+           ),
+
+s[worker1]: mapper&datum(Int) .
+            μ(t)(
+              reducer⊕result(Int).
+              mapper&{
+                datum(Int) . t,
+                stop . end
+              }
+            ),
+
+s[worker2]: mapper&datum(Int) .
+            μ(t)(
+              reducer⊕result(Int).
+              mapper&{
+                datum(Int) . t,
+                stop . end
+              }
+            ),
+
+s[worker3]: mapper&datum(Int) .
+            μ(t)(
+              reducer⊕result(Int).
+              mapper&{
+                datum(Int) . t,
+                stop . end
+              }
+            ),
+
+s[reducer]: μ(t)(
+              worker1&result(Int) .
+              worker2&result(Int) .
+              worker3&result(Int) .
+              mapper⊕{
+                continue(Int) . t,
+                stop . end
+              }
+            )

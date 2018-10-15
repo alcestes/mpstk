@@ -1,0 +1,20 @@
+### Recursive two-buyers protocol.
+###
+### Copyright 2018 Alceste Scalas <alceste.scalas@imperial.ac.uk>
+### Released under the MIT License: https://opensource.org/licenses/MIT
+
+s[alice]: shop⊕query(Str) .
+          shop&price(Int) .
+          μ(t)(
+            bob⊕{
+              split(Int) . bob&{yes . shop⊕buy . end,
+                                no . t},
+              cancel . shop⊕no
+            }),
+
+s[shop]: alice&query(Str) . alice⊕price(Int) . alice&{buy.end, no.end},
+
+s[bob]: μ(t)alice&{
+          split(Int) . alice⊕{yes.end, no.t},
+          cancel.end
+        }

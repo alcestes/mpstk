@@ -1,0 +1,75 @@
+### Independent multiparty workers protocol.
+###
+### Copyright 2018 Alceste Scalas <alceste.scalas@imperial.ac.uk>
+### Released under the MIT License: https://opensource.org/licenses/MIT
+
+s[starter]: workerA1⊕datum(Int) .
+            workerA2⊕datum(Int) .
+            workerA3⊕datum(Int) .
+            end,
+
+s[workerA1]: starter&datum(Int) .
+             μ(t)(
+               workerB1⊕{
+                 datum(Int) . workerC1&result(Int) . t,
+                 stop . end
+               }
+             ),
+
+s[workerB1]: μ(t)(
+               workerA1&{
+                 datum(Int) . workerC1⊕datum(Int) . t,
+                 stop . workerC1⊕stop . end
+               }
+             ),
+
+s[workerC1]: μ(t)(
+               workerB1&{
+                 datum(Int) . workerA1⊕result(Int) . t,
+                 stop . end
+               }
+             ),
+
+s[workerA2]: starter&datum(Int) .
+             μ(t)(
+               workerB2⊕{
+                 datum(Int) . workerC2&result(Int) . t,
+                 stop . end
+               }
+             ),
+
+s[workerB2]: μ(t)(
+               workerA2&{
+                 datum(Int) . workerC2⊕datum(Int) . t,
+                 stop . workerC2⊕stop . end
+               }
+             ),
+
+s[workerC2]: μ(t)(
+               workerB2&{
+                 datum(Int) . workerA2⊕result(Int) . t,
+                 stop . end
+               }
+             ),
+
+s[workerA3]: starter&datum(Int) .
+             μ(t)(
+               workerB3⊕{
+                 datum(Int) . workerC3&result(Int) . t,
+                 stop . end
+               }
+             ),
+
+s[workerB3]: μ(t)(
+               workerA3&{
+                 datum(Int) . workerC3⊕datum(Int) . t,
+                 stop . workerC3⊕stop . end
+               }
+             ),
+
+s[workerC3]: μ(t)(
+               workerB3&{
+                 datum(Int) . workerA3⊕result(Int) . t,
+                 stop . end
+               }
+             )

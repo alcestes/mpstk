@@ -1,0 +1,42 @@
+%%% Liveness+: when i(s, r1, r2, -, -) / o(s, r1, r2, m, p) is enabled,
+%%% we can follow a finite sequence of interactions that eventually
+%%% synchronises as t(s, r1, r2, m, p); and for each step of such a sequence,
+%%% the choices of the involved roles (if any) cannot infinitely postpone
+%%% t(s, r1, r2, m, p)
+%%%
+%%% Copyright 2018 Alceste Scalas <alceste.scalas@imperial.ac.uk>
+%%% Released under the MIT License: https://opensource.org/licenses/MIT
+
+
+nu Z.(forall s1: Session . forall r1,r2: Role .
+  ((exists m1: Message, p1: Payload . <i(s1, r1, r2, m1, p1)>true) =>
+    mu Y.(
+      (exists m1: Message, p1: Payload . <t(s1, r1, r2, m1, p1)>true)
+      ||
+      (exists r3: Role .
+        (exists r4: Role, m2: Message, p2: Payload .
+           <t(s1, r3, r4, m2, p2)>true)
+        &&
+        (forall r4: Role, m2: Message, p2: Payload .
+           [t(s1, r3, r4, m2, p2)]Y)
+      )
+    )
+  )
+  &&
+  (forall m1: Message, p1: Payload .
+    <o(s1, r1, r2, m1, p1)>true =>
+      mu Y.(
+        <t(s1, r1, r2, m1, p1)>true
+        ||
+        (exists r3: Role .
+          (exists r4: Role, m2: Message, p2: Payload .
+             <t(s1, r3, r4, m2, p2)>true)
+          &&
+          (forall r4: Role, m2: Message, p2: Payload .
+             [t(s1, r3, r4, m2, p2)]Y)
+        )
+      )
+  )
+  &&
+  (forall r3,r4: Role, m2: Message, p2: Payload . [t(s1, r3, r4, m2, p2)]Z)
+)

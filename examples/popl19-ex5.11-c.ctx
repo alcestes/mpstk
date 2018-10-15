@@ -1,0 +1,8 @@
+### A live++ and terminating typing context, with non-tail-recursive types.
+###
+### Copyright 2018 Alceste Scalas <alceste.scalas@imperial.ac.uk>
+### Released under the MIT License: https://opensource.org/licenses/MIT
+
+s[p]: μ(t)q⊕m(t) . end,
+
+s[q]: p&m( μ(t)q⊕m(t) ) . end

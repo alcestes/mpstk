@@ -1,0 +1,14 @@
+### A live+, but non-live++, typing context.
+###
+### Copyright 2018 Alceste Scalas <alceste.scalas@imperial.ac.uk>
+### Released under the MIT License: https://opensource.org/licenses/MIT
+
+s[p]: q⊕m1 . q2⊕m2,
+
+s[q]: p&m1 . end,
+
+s[q2]: p&m2 . end,
+
+s[r1]: μ(t)r2⊕m2 . t,
+
+s[r2]: μ(t)r1&m2 . t

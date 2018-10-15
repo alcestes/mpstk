@@ -1,0 +1,4 @@
+server→client:{
+  login  . client→auth:passwd(Str) . auth→server:auth(Bool) . end,
+  cancel . end
+}

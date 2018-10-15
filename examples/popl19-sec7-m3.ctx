@@ -1,0 +1,8 @@
+### A safe, but deadlocked, typing context.
+###
+### Copyright 2018 Alceste Scalas <alceste.scalas@imperial.ac.uk>
+### Released under the MIT License: https://opensource.org/licenses/MIT
+
+s[p]: q⊕m1 . q&m2,
+
+s[q]: p⊕m2 . p&m1

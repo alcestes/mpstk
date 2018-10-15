@@ -1,0 +1,14 @@
+#!/bin/sh
+#
+# Generate Table 4 of the paper:
+#   Alceste Scalas and Nobuko Yoshida.
+#   "Less is More: Multiparty Session Types Revisited".
+#   POPL 2019
+
+bin/mpstk verify \
+    -p safety,deadlock-freedom,liveness,liveness+,liveness++,never-termination,termination \
+    examples/oauth2.global \
+    examples/rec-two-buyers.ctx \
+    examples/rec-map-reduce.ctx \
+    examples/multiparty-workers.ctx \
+    $@

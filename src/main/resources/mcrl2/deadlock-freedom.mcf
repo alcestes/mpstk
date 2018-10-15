@@ -1,0 +1,18 @@
+%%% Deadlock freedom: if no further communications are possible, then no
+%%% inputs-outputs are enabled, either
+%%%
+%%% Copyright 2018 Alceste Scalas <alceste.scalas@imperial.ac.uk>
+%%% Released under the MIT License: https://opensource.org/licenses/MIT
+nu Z.(
+  (
+    (forall s1: Session, r1,r2: Role, m1: Message, p1: Payload .
+       [t(s1, r1, r2, m1, p1)]false) =>
+      (
+        forall s1: Session, r1,r2: Role, m1: Message, p1: Payload .
+          [i(s1, r1, r2, m1, p1)]false && [o(s1, r1, r2, m1, p1)]false
+      )
+  )
+  &&
+  [exists s1: Session, r1,r2: Role, m1: Message, p1: Payload .
+     t(s1, r1, r2, m1, p1)]Z
+)

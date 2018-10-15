@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>mpstk: the MultiParty Session Types toolKit</title>
+    <meta name="author" content="Alceste Scalas">
+    <meta name="keywords" content="multiparty session types,mpst,model checking,mcrl2,popl,artifact,protocol,verification,deadlock fredom,liveness">
+    <style>
+      h1,h2,h3,h4 {
+        font-family: Georgia, Times, serif;
+        padding: 2px;
+        padding-left: 0.5em;
+        padding-right: 0.5em;
+      }
+      h1 {
+        position: -webkit-sticky;
+        position: sticky;
+        left: 0px;
+        top: 0px;
+        height: 50px;
+        width: 100%;
+        margin-top: 0px;
+        padding-top: 0.3em;
+        margin-bottom: 0px;
+        color: #405d27;
+        background-color: #e3eaa7;
+      }
+      h2,h3 {
+        background-color: #405d27;
+        color: #ffffff;
+      }
+      h3 {
+        color: #e3eaa7;
+        display: inline;
+      }
+      h4 {
+        color: #405d27;
+        background-color: #e3eaa7;
+        display: inline;
+      }
+      body {
+        font-family: Helvetica, Arial, sans-serif;
+        background-color: #e3eaa7;
+        margin-top: 0px;
+        margin-right: 0px;
+      }
+      .path, .code, .command {
+        font-family: monospace;
+      }
+      .command {
+        font-family: monospace;
+        background-color: black;
+        color: white;
+        padding: 1px;
+      }
+      div.command {
+        margin-left: 1em;
+        margin-right: 1em;
+        padding-left: 1em;
+        padding-right: 1em;
+      }
+      span.mpstk {
+        font-family: sans-serif;
+        font-weight: bold;
+        color: #405d27;
+      }
+      div#toc{
+        float: left;
+        width: 200px;
+      }
+      div#tocbody {
+        position: fixed;
+        left: 0px;
+        top: 50px;
+        margin-left: 1em;
+        margin-right: 0px;
+      }
+      div#tocbody>ul {
+        padding-left: 0px;
+        width: 180px;
+        list-style: none;
+      }
+      div#tocbody>ul>li {
+        padding-left: 1em; 
+        text-indent: -1em;
+        margin-top: 1em;
+      }
+      div#tocbody>ul>li>a {
+        color: #405d27;
+      }
+      div#tocbody>ul>li::before {
+        content: "■ ";
+        padding-left: 0em;
+        color: #405d27;
+      }
+      div#contents {
+        margin-left: 200px;
+        padding-top: 0.5em;
+        padding-left: 1em;
+        padding-right: 1em;
+        margin-right: 0em;
+        background-color: #ffffff;        
+      }
+      p.bibref {
+        margin: auto;
+        text-align: center;
+        width: 80%;
+        padding-left: 1em;
+        padding-right: 1em;
+        background-color: #e3eaa7;
+      }
+      p#license {
+        width: 180px;
+        padding-top: 1em;
+        font-size: 80%;
+      }
+      th, td {
+        padding-left: 0.5em;
+      }
+    </style>
+  </head>
+
+  <body>
+
+  <h1>mpstk: the MultiParty Session Types toolKit</h1>
+
+  <div id="toc">
+    <div id="tocbody">
+      <ul>
+        <li><a href="#software-requirements">Software requirements</a></li>
+        <li><a href="#compiling">Compiling</a></li>
+        <li><a href="#usage">Usage</a></li>
+        <li><a href="#reproducing">Reproducing the results in the companion paper</a></li>
+        <li><a href="#internals">Behind the scenes: API, source code overview, extensions, and mCRL2 encoding</a>
+        <li><a href="#related">Related work</a></li>
+        <li><a href="#todo">TODOs and future work</a></li>
+        <li><a href="#contacts">Contacts</a></li>
+      </ul>
+
+      <p id="license">
+        <a rel="license"
+           href="http://creativecommons.org/licenses/by/4.0/">
+          <img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" />
+        </a>
+        <br />
+        This work is licensed under a <a rel="license"
+                                         href="http://creativecommons.org/licenses/by/4.0/">Creative
+          Commons Attribution 4.0 International License</a>.
+      </p><!-- end license -->
+    </div><!-- end tocbody -->
+  </div><!-- end toc -->
+
+  <div id="contents">
+
+  <p>
+    <span class="mpstk">mpstk</span> is a toolkit
+    for <strong>specifying multiparty protocols</strong>
+    and <strong>verifying their properties</strong>.
+    It is based on the theory of <em>multiparty session types</em>.
+  </p>
+
+  <p>
+    <span class="mpstk">mpstk</span> strictly follows the new
+    generalised theory of session types presented in the companion
+    paper:
+  </p>
+
+  <p class="bibref">
+    <em>
+      Alceste Scalas and Nobuko Yoshida.
+      <strong>Less is More: Multiparty Session Types Revisited</strong>.
+      POPL 2019.
+    </em>
+  </p>
+
+  <h2 id="software-requirements">Software requirements</h2>
+  
+  <p>
+    <em>
+      <strong>NOTE:</strong> if you are using the preconfigured
+      virtual machine of the POPL'19 artifact, you can skip this
+      section and jump to the <a href="#usage">usage instructions</a>.
+    </em>
+  </p>
+
+  <p>
+    The following software packages must be installed in order to
+    compile and use <span class="mpstk">mpstk</span>:
+  </p>
+
+  <ul>
+    <li>
+      <strong><a href="https://mcrl2.org/">The mCRL2 model checker</a>.</strong>
+      The supported version is 201808.0,
+      but <span class="mpstk">mpstk</span> should also work with earlier
+      and later versions (although the verification speed might be
+      severely impacted).
+    </li>
+    <li>
+      <strong><a href="https://openjdk.java.net/install/">Java Runtime Environment 8</a>.</strong>
+      Note that <span class="mpstk">mpstk</span> is written in Scala
+      2.12, that <a href="https://docs.scala-lang.org/overviews/jdk-compatibility/overview.html">might not work correctly with Java 9 or higher</a>.
+    </li>
+    <li>
+      <strong><a href="https://www.scala-sbt.org/">sbt, the Scala Build Tool</a>.</strong>
+    </li>
+  </ul>
+
+  <p>
+    <span class="mpstk">mpstk</span> has been tested on GNU/Linux
+    (Ubuntu 16.04 and 18.04), and its code is written with portability
+    in mind. It should run on other operating systems (especially
+    Unix-like ones) with little or no adaptations.
+  </p>
+
+  <h2 id="compiling">Compiling</h2>
+
+  <p>Simply run:</p>
+
+  <div class="command">
+    sbt package
+  </div>
+
+  <p>
+    The build system will automatically download
+    all <span class="mpstk">mpstk</span> dependencies (including the
+    Scala compiler, and its runtime).
+  </p>
+
+  <h2 id="usage">Usage</h2>
+
+  <p>
+    Currently, <span class="mpstk">mpstk</span> provides two tools:
+  </p>
+  
+  <ul>
+    <li>
+      a <em>verifier</em>, that checks behavioural properties of
+      multiparty protocols. Protocols can be described either as
+      global types, or as session typing contexts. To obtain usage
+      information, invoke:
+      <div class="command">
+        ./bin/mpstk verify --help
+      </div>
+    </li>
+    <li>
+      a <em>projector</em>, that projects global types into
+      session typing contexts. To obtain usage information, invoke:
+      <div class="command">
+        ./bin/mpstk project --help
+      </div>
+    </li>
+  </ul>
+
+  <p>
+    The toolkit supports two types of protocol specification:
+  </p>
+
+  <ul>
+    <li>
+      <strong>global types
+        (file extension: <span class="code">.global</span>)</strong>,
+      with a syntax based on Definitions 3.1 (Table 1) and 2.4 of the
+      companion paper;
+    </li>
+    <li>
+      <strong>session typing contexts
+        (file extension: <span class="code">.ctx</span>)</strong>,
+      with a syntax based on Definitions 2.6 and 2.4 of the companion
+      paper.
+  </ul>
+
+  <p>
+    <span class="mpstk">mpstk</span> includes various examples:
+    they are <a href="#reproducing-other">illustrated below</a>.
+  </p>
+
+  <h2 id="reproducing">Reproducing the results in the companion paper</h2>
+
+  <ul>
+    <li><a href="#reproducing-tables">Reproducing Tables 4 and 5</a></li>
+    <li><a href="#reproducing-table5-variants">Variations of Table 5</a></li>
+    <li><a href="#reproducing-other">Verifying other examples</a></li>
+    <li><a href="#reproducing-mu">Checking the implementation of Table 3</a></li>
+  </ul>
+
+  <h3 id="reproducing-tables">Reproducing Tables 4 and 5</h3>
+  
+  <p>
+    The following scripts allow to easily reproduce Tables 4 and 5 of
+    the companion paper <em>(between parentheses, the expected
+    execution time on an Intel Core i7 CPU @3.60 GHz)</em>.
+  </p>
+
+  <ul>
+    <li>
+      <span class="command">./bin/popl19-table4</span>
+      <em>(30 seconds)</em>.
+      Produces Table 4, <em>except</em> the first column,
+      with label &ldquo;consistent&rdquo;.
+      <span class="mpstk">mpstk</span> does not currently implement
+      consistency checks (Table 1, Definition 3.7), since the main
+      goal of the companion paper is to remove the need for
+      consistency. Note that one of the paper's result is that
+      consistency is subsumed by safety (Lemma 5.9), and the latter is
+      supported by the tool.
+    </li>
+    <li>
+      <span class="command">./bin/popl19-table5-fast</span>
+      <em>(90 seconds)</em>.
+      Produces a rough version of Table 5: no states count, and
+      measurements based on 3 repetitions (instead of 30).
+    </li>
+    <li>
+      <span class="command">./bin/popl19-table5</span>
+      <em>(15 minutes)</em>.
+      Produces the full contents of Table 5.
+      Note that the table includes the number of states of the
+      multiparty protocol being verified: this requires the
+      explicit generation of the protocol transition system
+      (via mCRL2's tool <span class="code">lps2lts</span>),
+      which is a rather expensive operation.
+    </li>
+  </ul>
+
+  <p>
+    In all cases, it is possible to save the results in CSV format,
+    simply by adding the option
+    <span class="command">--output-csv=&lt;CSVFILE&gt;</span> when
+    invoking the scripts.  For more details, see
+    <span class="command">./bin/mpstk verify --help</span>.
+  </p>
+
+  <h3 id="reproducing-table5-variants">Variations of Table 5</h3>
+
+  <p>
+    Table 5 in the companion paper measures the time needed
+    by <span class="mpstk">mpstk</span> to verify a specification
+    against a property; in particular, it measures the time needed to
+    invoke mCRL2's tool <span class="code">pbes2bool</span>, and
+    retrieve its result. This is the dominating time in the
+    verification procedure.
+  </p>
+
+  <p>
+    <span class="mpstk">mpstk</span> can produce two other related
+    measurements, through the option
+    <span class="command">--benchmark-type &lt;T&gt;</span>
+    — where <span class="command">&lt;T&gt;</span> can be either:
+  </p>
+
+  <ul>
+    <li>
+      <span class="command">realtime</span>: measures the wall clock
+      time used by mCRL2's <span class="code">pbes2bool</span> tool,
+      without the overhead introduced by the JVM when calling external
+      programs. This benchmark type uses the
+      <span class="code">time</span> utility, 
+      available on all <a href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/time.html">POSIX-compliant systems</a>.
+    </li>
+    <li>
+      <span class="command">endtoend</span>: measures the whole time
+      needed to parse a <span class="code">.global</span>
+      or <span class="code">.ctx</span> file, turn it into an mCRL2
+      specification, create the necessary temporary files, and perform
+      the verification. This measurement takes into account the
+      maximum overhead introduced by <span class="mpstk">mpstk</span>
+      internals.
+    </li>
+  </ul>
+
+  <p>
+    The results of all benchmark variants should be very
+    similar: <span class="command">realtime</span> should be (on
+    average) around 1% faster than the default benchmark,
+    while <span class="command">endtoend</span> should be around 1%
+    slower.
+  </p>
+
+  <h3 id="reproducing-other">Verifying other examples</h3>
+
+  <p>
+    The <span class="path"><a href="../examples/">examples/</a></span>
+    directory contains all the examples in the companion paper, and
+    more. Some files have descriptive names, while others refer to
+    their position in the paper:
+  </p>
+
+  <table>
+    <tr>
+      <td>
+        <span class="path">
+          <a href="../examples/multiparty-game.global">multiparty-game.global</a>
+        </span>
+      </td>
+      <td>
+        Running example from <a href="http://dx.doi.org/10.4230/LIPIcs.ECOOP.2017.24">an ECOOP'17 paper</a>.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <span class="path">
+          <a href="../examples/multiparty-workers.ctx">multiparty-workers.ctx</a>
+        </span>
+      </td>
+      <td>
+        Table 2, protocol 4 (&ldquo;independent multiparty workers&rdquo;).
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <span class="path">
+          <a href="../examples/oauth2.global">oauth2.global</a>
+        </span>
+      </td>
+      <td>
+        Opening example in Section 1.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <span class="path">
+          <a href="../examples/payload-subtype.ctx">payload-subtype.ctx</a>
+        </span>
+      </td>
+      <td>
+        Small example used to
+        explain <a href="#encoding-subtyping">how <span class="mpstk">mpstk</span>
+        handles subtyping</a>.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <span class="path">
+          <a href="../examples/popl19-ex5.11-a.ctx">popl19-ex5.11-a.ctx</a>
+        </span>
+      </td>
+      <td>
+        Example 5.11, case <em>Γ<sub>A</sub></em>.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <span class="path">
+          <a href="../examples/popl19-ex5.11-b.ctx">popl19-ex5.11-b.ctx</a>
+        </span>
+      </td>
+      <td>
+        Example 5.11, case <em>Γ<sub>B</sub></em>.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <span class="path">
+          <a href="../examples/popl19-ex5.11-c.ctx">popl19-ex5.11-c.ctx</a>
+        </span>
+      </td>
+      <td>
+        Example 5.11, case <em>Γ<sub>C</sub></em>.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <span class="path">
+          <a href="../examples/popl19-ex5.6.ctx">popl19-ex5.6.ctx</a>
+        </span>
+      </td>
+      <td>
+        Example 5.6.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <span class="path">
+          <a href="../examples/popl19-ex5.7.ctx">popl19-ex5.7.ctx</a>
+        </span>
+      </td>
+      <td>
+        Example 5.7.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <span class="path">
+          <a href="../examples/popl19-sec2.3.ctx">popl19-sec2.3.ctx</a>
+        </span>
+      </td>
+      <td>
+        The unsafe typing context discussed in Section 2.3.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <span class="path">
+          <a href="../examples/popl19-sec5.ctx">popl19-sec5.ctx</a>
+        </span>
+      </td>
+      <td>
+        The safe, but deadlocked, typing context discussed in the
+        opening of Section 5.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <span class="path">
+          <a href="../examples/popl19-sec7-m3.ctx">popl19-sec7-m3.ctx</a>
+        </span>
+      </td>
+      <td>
+        The safe, but deadlocked, typing context discussed in Section
+        7, point (M3).
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <span class="path">
+          <a href="../examples/rec-map-reduce.ctx">rec-map-reduce.ctx</a>
+        </span>
+      </td>
+      <td>
+        Table 2, protocol 3 (&ldquo;recursive map/reduce&rdquo;).
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <span class="path">
+          <a href="../examples/rec-two-buyers.ctx">rec-two-buyers.ctx</a>
+        </span>
+      </td>
+      <td>
+        Table 2, protocol 2 (&ldquo;recursive two-buyer&rdquo;).
+      </td>
+    </tr>
+  </table>
+
+  <p>
+    All examples can be verified by invoking the tool as expected, e.g.:
+    &nbsp;<span class="command">./bin/mpstk verify examples/popl19-ex5.11-c.ctx</span>
+  </p>
+
+  <h3 id="reproducing-mu">Checking the implementation of Table 3</h3>
+
+  <p>
+    The multiparty session typing context properties verified
+    by <span class="mpstk">mpstk</span> are implemented
+    as <a href="https://www.mcrl2.org/web/user_manual/language_reference/mucalc.html">mCRL2 µ-calculus formulas</a>,
+    by strictly following the definitions of Table 3 in the companion paper.
+  </p>
+
+  <p>
+    Each property is defined as a <span class="code">.mcf</span> file,
+    and is provided as part of
+    the <a href="../src/main/resources/mcrl2">program resources</a>:
+  </p>
+
+  <ul>
+    <li>
+      <span class="path"><a href="../src/main/resources/mcrl2/safety.mcf">safety.mcf</a></span>: safety;
+    </li>
+    <li>
+      <span class="path"><a href="../src/main/resources/mcrl2/deadlock-freedom.mcf">deadlock-freedom.mcf</a></span>: deadlock freedom;
+    </li>
+    <li>
+      <span class="path"><a href="../src/main/resources/mcrl2/termination.mcf">termination.mcf</a></span>: termination;
+    </li>
+    <li>
+      <span class="path"><a href="../src/main/resources/mcrl2/never-termination.mcf">never-termination.mcf</a></span>: never-termination;
+    </li>
+    <li>
+      <span class="path"><a href="../src/main/resources/mcrl2/liveness.mcf">liveness.mcf</a></span>: liveness;
+    </li>
+    <li>
+      <span class="path"><a href="../src/main/resources/mcrl2/liveness+.mcf">liveness+.mcf</a></span>: liveness+;
+    </li>
+    <li>
+      <span class="path"><a href="../src/main/resources/mcrl2/liveness++.mcf">liveness++.mcf</a></span>: liveness++.
+    </li>
+  </ul>
+
+  <p>
+    By visually inspecting the contents of
+    the <span class="code">.mcf</span> files above, it should be
+    possible to grasp their direct correspondence with Table 3 in the
+    companion paper. Still, such <span class="code">.mcf</span> files
+    use several mCRL2 sorts
+    (e.g., <span class="code">Session</span>, <span class="code">Role</span>,
+    <span class="code">Message</span>, ...) that are defined elsewhere.
+    For more details, please see <a href="#encoding">how session
+    typing contexts are encoded in mCRL2</a>.
+  </p>
+
+  <h2 id="internals">Behind the scenes</h2>
+ 
+  <ul>
+    <li><a href="#api">API documentation</a></li>
+    <li><a href="#structure">Overview of the <span class="mpstk">mpstk</span> source code</a></li>
+    <li><a href="#extensions">Extending <span class="mpstk">mpstk</span></a></li>
+    <li><a href="#encoding">Encoding session typing contexts in mCRL2</a></li>
+  </ul>
+
+  <h3 id="api">API documentation</h3>
+
+  <p>
+    To build the API documentation, invoke:
+  </p>
+
+  <div class="command">
+    sbt doc
+  </div>
+
+  <p>
+    The resulting documentation will be available in
+    <span class="path"><a href="../target/scala-2.12/api/mpstk/index.html">target/scala-2.12/api/mpstk/</a></span>.
+  </p>
+
+  <h3 id="structure">Overview of the mpstk source code</h3>
+
+  <p>
+    This section provides a brief description of
+    each <span class="mpstk">mpstk</span> source code file.
+  </p>
+  
+  <h4 id="data-structures">Core data structures</h4>
+
+  <ul>
+    <li>
+      <span class="path"><a href="../src/main/scala/GlobalType.scala">GlobalType.scala</a></span>: representation of a global session type.
+    </li>
+    <li>
+      <span class="path"><a href="../src/main/scala/MPST.scala">MPST.scala</a></span>: representation of a multiparty session type.
+    </li>
+    <li>
+      <span class="path"><a href="../src/main/scala/Context.scala">Context.scala</a></span>: representation of a multiparty session typing context.
+    </li>
+    <li>
+      <span class="path"><a href="../src/main/scala/Ops.scala">Ops.scala</a></span>:
+      implementation of most operations involving global
+      types, session types, and typing contexts (e.g., substitutions,
+      unfolding, Barendregt convention...).
+    </li>
+    <li>
+      <span class="path"><a href="../src/main/scala/Subtyping.scala">Subtyping.scala</a></span>:
+      implementation of the subtyping algorithm for multiparty session
+      types.
+    </li>
+    <li>
+      <span class="path"><a href="../src/main/scala/RawMPST.scala">RawMPST.scala</a></span>:
+      this file contains a &ldquo;raw&rdquo; representation of
+      multiparty session types, and typing contexts: they do not
+      follow the syntactic constraints formalised in the companion
+      paper, and are used internally as an intermediate step, to
+      generate the <a href="#encoding-impl">mCRL2 encoding of typing
+      contexts</a>.
+    </li>
+    <li>
+      <span class="path"><a href="../src/main/scala/Util.scala">Util.scala</a></span>:
+      miscellaneous utility methods.
+    </li>
+  </ul>
+
+  <h4 id="encoding-impl">mCRL2 encoding and verification</h4>
+
+  <ul>
+    <li>
+      <span class="path"><a href="../src/main/scala/mcrl2/Spec.scala">mcrl2/Spec.scala</a></span>:
+      representation of a multiparty session typing context as a mCRL2
+      specification. This files implements the encoding strategy
+      <a href="#encoding">described below</a>.
+    </li>
+    <li>
+      <span class="path"><a href="../src/main/scala/mcrl2/Property.scala">mcrl2/Property.scala</a></span>:
+      representation of typing context properties. Each property
+      corresponds to a <span class="code">.mcf</span> file
+      (<a href="https://www.mcrl2.org/web/user_manual/language_reference/mucalc.html">mCRL2 µ-calculus formula</a>) available among
+      the <a href="../src/main/resources/mcrl2">program resources</a>;
+      moreover, each such <span class="code">.mcf</span> file
+      corresponds to a µ-calculus formula defined on Table 3 in the
+      companion paper.
+    </li>
+    <li>
+      <span class="path"><a href="../src/main/scala/mcrl2/Verifier.scala">mcrl2/Verifier.scala</a></span>:
+      a <span class="code">Verifier</span> object checks whether a
+      given <span class="code">Spec</span> instance satisfies a given
+      set of <span class="code">Property</span> instances. This is the
+      main interface to mCRL2: a <span class="code">Verifier</span>
+      handles the creation of temporary files, launches mCRL2 tools as
+      needed, reads their output, returns their result, and performs
+      benchmarks.
+    </li>
+  </ul>
+
+  <h4>Tools</h4>
+
+  <ul>
+    <li>
+      <span class="path"><a href="../src/main/scala/tool/Common.scala">tool/Common.scala</a></span>:
+      abstract class with common source code for all tools.
+    </li>
+    <li>
+      <span class="path"><a href="../src/main/scala/tool/Verifier.scala">tool/Verifier.scala</a></span>:
+      implements the command line tool
+      <span class="command">mpstk verify</span>.
+    </li>
+    <li>
+      <span class="path"><a href="../src/main/scala/tool/Projector.scala">tool/Projector.scala</a></span>:
+      implements the command line tool
+      <span class="command">mpstk project</span>.
+    </li>
+  </ul>
+
+
+  <h3 id="extensions">Extending mpstk</h3>
+
+  <p>
+    <span class="mpstk">mpstk</span> can be easily extended to verify
+    new behavioural properties (defined as <a href="https://www.mcrl2.org/web/user_manual/language_reference/mucalc.html">mCRL2 µ-calculus formulas</a>) of
+    session typing contexts. The procedure can be inferred from the
+    source code
+    of <span class="path"><a href="../src/main/scala/mcrl2/Property.scala">mcrl2/Property.scala</a></span>:
+  </p>
+
+  <ol>
+    <li>
+      define a new object <span class="code">MyProperty</span>
+      that extends the abstract
+      class <span class="code">Property</span>:
+      <div class="command">
+        case object MyProperty extends Property(descr, filename, shortName)
+      </div>
+      where:
+      <ul>
+        <li>
+          <span class="code">descr</span> is a human-readable description;
+        </li>
+        <li>
+          <span class="code">filename</span> is the filename of an
+          mCRL2 formula file (<em>minus</em> its
+          <span class="code">.mcf</span> extension).
+          This name is also used to reference the new property by the
+          <span class="command">mpstk verify</span> command line tool;
+        </li>
+        <li>
+          <span class="code">shortName</span> is a shorthand
+          used, e.g., in the headers of tables and CSV files;
+        </li>
+      </ul>
+    </li>
+    <li>
+      add <span class="code">MyProperty</span> to the
+      set <span class="code">Properties.all</span>;
+    </li>
+    <li>
+      add the file <span class="code">filename.mcf</span> of the new property
+      the <a href="../src/main/resources/mcrl2">program resources
+        directory</a>.
+    </li>
+  </ol>
+
+  <p>
+    The missing part in the procedure above is how to actually write
+    the <span class="code">filename.mcf</span> file, so that it can be
+    correctly used to verify the mCRL2 process specifications
+    generated
+    by <span class="path"><a href="../src/main/scala/mcrl2/Spec.scala">mcrl2/Spec.scala</a></span>.
+    To do it, it is necessary to know
+    <a href="#encoding">how typing contexts are encoded in mCRL2</a>.
+  </p>
+
+  <h3 id="encoding">Encoding session typing contexts in mCRL2</h3>
+
+  <p>
+    <em><strong>NOTE:</strong> this section uses some formal notation
+      defined in the companion paper, and assumes that readers have
+      some familiarity with the mCRL2 model checker.</em>
+  </p>
+
+  <ul>
+    <li><a href="#encoding-overview">Overview</a></li>
+    <li><a href="#encoding-struct">Structure of autogenerated mCRL2 specifications</a></li>
+    <li><a href="#encoding-inspect">The encoding in practice</a></li>
+    <li><a href="#encoding-subtyping">A note on subtyping and message payloads</a></li>
+    <li><a href="#encoding-non-tailrec">A note on non-tail-recursive types</a></li>
+  </ul>
+
+  <h4 id="encoding-overview">Overview</h4>
+  
+  <p>
+    Take a typing context <em>Γ</em>. In a nutshell, the goal of the mCRL2
+    encoding is to:
+  </p>
+
+  <ol>
+    <li>
+      turn each entry <em>s[p]:T ∈ Γ</em> into a sequential mCRL2
+      process, that performs input/output actions according to
+      Definition 2.8 (rules [Γ-&] and [Γ-⊕]). In particular,
+      mCRL2's choice operator &ldquo;<span class="code">+</span>&rdquo;
+      should model external/internal choices;
+    </li>
+    <li>
+      then, compose the sequential processes above in parallel, to
+      model the communications of <em>Γ</em> (Definition 2.8, rule [Γ-Comm]).
+      In particular, the mCRL2's parallel composition operator
+      &ldquo;<span class="code">||</span>&rdquo;, together with
+      &ldquo;<span class="code">allow</span>&rdquo;/&ldquo;<span class="code">comm</span>&rdquo;,
+      should model synchronisation of inputs/outputs with
+      matching labels/payloads.
+    </li>
+  </ol>
+
+  <h4 id="encoding-struct">Structure of autogenerated mCRL2 specifications</h4>
+
+  <p>
+    To achieve the above goal, <span class="mpstk">mpstk</span>
+    converts a typing context <em>Γ</em> (internally represented as
+    a <a href="#data-structures"><span class="code">Context</span></a>
+    instance) into a mCRL2 process specification (internally
+    represented as
+    a <a href="#data-structures"><span class="code">Spec</span></a>
+    instance) consisting of three parts:
+  </p>
+
+  <ol>
+    <li>
+      <strong>a fixed <em>preamble</em></strong>, available in the
+      file <span class="path"><a href="../src/main/resources/mcrl2/mpst-preamble.mcrl2">mpst-preamble.mcrl2</a></span>.
+      It defines:
+      <ul>
+        <li>
+          various mCRL2 sorts that correspond to the syntax of
+          multiparty session
+          types: <span class="code">Session</span>,
+          <span class="code">Role</span>,
+          <span class="code">Message</span>,
+          <span class="code">Payload</span> (for details on the
+          handling of payloads, <a href="#encoding-subtyping">see below</a>);
+        </li>
+        <li>
+          actions <span class="code">i</span> / <span class="code">o</span>
+          / <span class="code">t</span> (for &ldquo;tau&rdquo;), that
+          correspond, respectively, to the input / output /
+          communication labels of Definition 2.8 in the companion paper
+          (with a minor difference: the encoded <span class="code">t</span>
+          actions do not discard the payload type);
+        </li>
+      </ul>
+    </li>
+    <li id="encoding-context-def">
+      <strong>an autogenerated mCRL2 process called
+        &ldquo;<span class="code">context</span>&rdquo;</strong>,
+      that is the actual <em>typing context encoding</em>.
+      The process &ldquo;<span class="code">context</span>&rdquo;,
+      in turn, uses other autogenerated process definitions:
+      <ul>
+        <li>
+          one process for each entry <em>s[p]:T ∈ Γ</em>. Such processes use
+          the <span class="code">i</span>
+          / <span class="code">o</span> actions defined in the
+          preamble, and the choice operator
+          &ldquo;<span class="code">+</span>&rdquo; to model
+          branching/selection session types. Such processes are
+          composed in parallel in the definition of
+          &ldquo;<span class="code">context</span>&rdquo;;
+        </li>
+        <li>
+          more process definitions to model the recursive sub-terms
+          (if any) of each entry <em>s[p]:T ∈ Γ</em>.
+        </li>
+      </ul>
+    </li>
+    <li>
+      <strong>a fixed <em>initial process declaration</em></strong>,
+      available in the file
+      <span class="path"><a href="../src/main/resources/mcrl2/mpst-init.mcrl2">mpst-init.mcrl2</a></span>.
+      It declares that &ldquo;<span class="code">context</span>&rdquo;
+      (i.e., the mCRL2-encoded session typing context
+      <a href="#encoding-context-def">defined above</a>)
+      is the initial mCRL2 process that is verified against
+      <a href="#reproducing-mu">µ-calculus formulas</a>.
+      In particular, the initial process declaration uses the operators
+      &ldquo;<span class="code">allow</span>&rdquo; / &ldquo;<span class="code">comm</span>&rdquo;
+      to specify
+      that <span class="code">i</span>/<span class="code">o</span>
+      actions synchronise by producing <span class="code">t</span>
+      actions.
+    </li>
+  </ol>
+
+  <p>
+    <strong>NOTE:</strong> the encoding above is <em>purposedly
+      designed with a fixed preamble</em>. The reason is that, by
+    using the generic sorts and actions defined
+    in <span class="path"><a href="../src/main/resources/mcrl2/mpst-preamble.mcrl2">mpst-preamble.mcrl2</a></span>,
+    one can develop generic µ-calculus formulas, that can be used to
+    verify <em>any</em> (encoded) session typing context
+    — without depending on the actual sessions, roles, message labels, and
+    payloads used therein. This feature is exploited in
+    the <a href="#reproducing-mu">µ-calculus formulas provided
+    by <span class="mpstk">mpstk</span></a>,
+    and can be leveraged to <a href="#extensions">extend the tool</a>.
+  </p>
+
+  <h4 id="encoding-inspect">The encoding in practice</h4>
+
+  <p>
+    To better grasp the explanation above, it is possible to inspect
+    the results of the mCRL2 encoding, by using
+    the <span class="command">--keep-temp</span> option
+    of <span class="command">mpstk verify</span>. E.g., by executing:
+  </p>
+
+  <div class="command">
+    ./bin/mpstk verify --keep-temp examples/oauth2.global
+  </div>
+
+  <p>
+    <span class="mpstk">mpstk</span> will <em>not</em> erase its
+    temporary working directory, and will print its path.
+  </p>
+
+  <p>
+    If such a temporary directory
+    is <span class="path">&lt;DIR&gt;</span>, then the autogenerated
+    file <span class="path">&lt;DIR&gt;/context.mcrl2</span>
+    contains various comments that show how the initial global type is
+    transformed throughout the encoding, and what part of the
+    multiparty protocol corresponds to each autogenerated mCRL2 process.
+  </p>
+
+  <p>
+    The temporary directory also contains other autogenerated
+    mCRL2 files (with the typical extensions, e.g.,
+    <span class="code">.lps</span>,
+    <span class="code">.pbes</span>, <span class="code">.lts</span>):
+    they can be used to manually invoke the mCRL2 tools.
+    For more insight, it is also possible to use
+    the <span class="command">--debug</span> option
+    of <span class="command">mpstk verify</span>: it logs each use
+    of the mCRL2 tools on the autogenerated files.
+  </p>
+
+  <h4 id="encoding-subtyping">A note on subtyping and message payloads</h4>
+
+  <p>
+    The <a href="#encoding-struct">explanation above</a> skims over a
+    subtle, but crucial, detail:
+  </p>
+
+  <ul>
+    <li>
+      in Definition 2.8 of the companion paper, the communication rule
+      [Γ-Comm] checks whether the payload type being sent
+      is <em>subtype</em> of the payload type expected by the
+      recipient;
+    </li>
+    <li>
+      in the mCRL2 encoding, payload types are represented with
+      the <span class="code">Payload</span> sort, used as part of
+      <span class="code">i</span>/<span class="code">o</span>
+      actions...
+    </li>
+    <li>
+      ...but when synchronising on such actions, and
+      yielding <span class="code">t</span> actions, mCRL2 can only
+      compare <span class="code">Payload</span>s for equality, and
+      cannot check subtyping — i.e., the resulting semantics is much
+      more restrictive than Definition 2.8!
+    </li>
+  </ul>
+
+  <p>
+    To overcome this limitation, <span class="mpstk">mpstk</span>
+    performs some syntactic pre-processing of typing contexts, before
+    encoding them in mCRL2.
+  </p>
+  
+  <p id="encoding-gamma-example">
+    For example, assume
+    <em>T⩽S</em>, and consider the typing context
+    &nbsp;<em>Γ = s[p]:q⊕m(T).T′, s[q]:p&m(S).S′</em>.&nbsp;
+    Its mCRL2 encoding must model the reduction&nbsp;
+    <em>Γ → s[p]:T′,s[q]:S′</em>,
+    &nbsp;as in Definition 2.8.
+    To this purpose, <span class="mpstk">mpstk</span> pre-processes
+    <em>Γ</em> as follows:
+  </p>
+
+  <ol>
+    <li>
+      <em>Γ</em> is initially represented as
+      a <a href="#data-structures"><span class="code">Context</span></a>
+      instance;
+    </li>
+    <li id="encoding-out-msgs">
+      <span class="mpstk">mpstk</span> collects all outputs that a
+      role <em>r</em> might send to another role <em>r′</em>. In this
+      example, <em>p</em> might send a singleton set of messages
+      <em>M = { m(T) }</em> to role <em>q</em>;
+    </li>
+    <li>
+      then, <em>Γ</em> is converted into a
+      <a href="#data-structures"><span class="code">raw Context</span></a>
+      instance. The difference is that, unlike
+      Definition 2.4 in the companion paper, the session types in
+      &ldquo;raw Γ&rdquo; can have internal/external choices with
+      duplicated message labels;
+    </li>
+    <li>
+      then, <span class="mpstk">mpstk</span> rewrites
+      the &ldquo;raw Γ&rdquo; as follows:
+      <ol>
+        <li>
+          it checks whether <em>p</em>'s type contains some external
+          choice that might receive a message <em>m(S)</em>
+          from <em>q</em>;
+        </li>
+        <li>
+          if so, it checks whether the potential outputs of <em>q</em>
+          (i.e., the set <em>M</em> <a href="#encoding-out-msgs">above</a>)
+          include some
+          message <em>m(T)</em> such that <em>T⩽S</em>
+          (this is why <span class="mpstk">mpstk</span>
+          implements the
+          <a href="#data-structures">session subtyping algorithm</a>);
+        </li>
+        <li>
+          if so, <span class="mpstk">mpstk</span> extends <em>p</em>'s
+          external choice with a new option <em>m(T)</em>, and the
+          same continuation of the original branch <em>m(S)</em>
+          (this is implemented in
+          <a href="../src/main/scala/RawMPST.scala"><span class="code">raw.MPST.addSubBranches()</span></a>);
+        </li>        
+      </ol>
+      In this example, the original <em>Γ</em>
+      <a href="#encoding-gamma-example">above</a> is rewritten as
+      &nbsp;<em>Γ′ = s[p]:q⊕m(T).T′, s[q]:p&{m(S).S′,m(T).S′}</em>&nbsp;
+      (notice the new branch of <em>s[q]</em>).
+    </li>
+    <li>
+      finally, the rewritten typing context <em>Γ′</em> is encoded in
+      mCRL2, as explained <a href="#encoding-struct">above</a>. Now,
+      mCRL2 can model synchronisation by simply checking whether an
+      output action <em>m(T)</em> from <em>p</em> to <em>q</em> is
+      matched by an <em>equal</em> input action <em>m(T)</em>
+      by <em>q</em> from <em>p</em>. This models the typing context
+      reduction
+      &nbsp;<em>Γ′ → s[p]:T′,s[q]:S′</em>,&nbsp;
+      thus implementing Definition 2.8 as desired.
+    </li>
+  </ol>
+
+  <p>
+    This explanation can be seen in practice, by executing, e.g.:
+  </p>
+
+  <div class="command">
+    ./bin/mpstk verify --keep-temp examples/payload-subtype.ctx
+  </div>
+  
+  <p>
+    and inspecting the autogenerated file
+    <span class="path">context.mcrl2</span>,
+    as illustrated <a href="#encoding-inspect">above</a>.
+  </p>
+
+  <h4 id="encoding-non-tailrec">A note on non-tail-recursive types</h4>
+
+  <p>
+    In the companion paper, Example 5.11 (case <em>Γ<sub>C</sub></em>)
+    shows a non-tail-recursive session type
+    <em>μ(t)q⊕m(t).end</em>, where the recursion variable <em>t</em>
+    occurs as payload of the message <em>m</em>. Such types are
+    troublesome (and usually unsupported) in classic session types
+    works (c.f. related work in the companion paper) — but they are
+    seamlessly supported in the new theory
+    behind <span class="mpstk">mpstk</span>.
+  </p>
+
+  <p>
+    To translate such non-tail-recursive types and typing contexts
+    into mCRL2 specifications, <span class="mpstk">mpstk</span>
+    proceeds in two steps:
+  </p>
+
+  <ol>
+    <li>
+      it <strong>unfolds the message payloads</strong>, ensuring that
+      they have no free variables. This transformation is
+      provided
+      by the method <a href="../src/main/scala/MPST.scala"><span class="code">MPST.unfoldPayloads</span></a>;
+      e.g., the method unfolds the type <em>μ(t)q⊕m(t).end</em> above into
+      <em>μ(t)q⊕m(μ(t')q⊕m(t').end).end</em>
+    </li>
+    <li>
+      then, <span class="mpstk">mpstk</span> performs the encoding as
+      described <a href="#encoding-struct">above</a>. The unfolded
+      payload is handled transparently, by the same principles that handle
+      the <a href="#encoding-subtyping">subtyping of message payloads</a>.
+    </li>
+  </ol>
+
+  <p>
+    This explanation can be seen in practice, by executing, e.g.:
+  </p>
+
+  <div class="command">
+    ./bin/mpstk verify --keep-temp examples/popl19-ex5.11-c.ctx
+  </div>
+
+  <p>
+    and inspecting the autogenerated file
+    <span class="path">context.mcrl2</span>,
+    as illustrated <a href="#encoding-inspect">above</a>.
+  </p>
+
+  <h2 id="related">Related work</h2>
+
+  <p>
+    <span class="mpstk">mpstk</span> shares some goals and features
+    with <a href="http://scribble.org/">Scribble</a>, the first tool
+    using the theory of session types to implement protocol
+    specification and verification.
+  </p>
+
+  <p>
+    However, <span class="mpstk">mpstk</span> ha a fundamental design
+    difference: it is a research tool that strictly adheres to the
+    new, generalised session types theory introduced in the companion
+    POPL'19 paper. Scribble, instead, stems from the classic
+    multiparty session types theory, and adds various extensions and
+    variations on top of it, mainly for the purpose of automatic code
+    generation (that <span class="mpstk">mpstk</span> does not
+    address).
+  </p>
+
+  <p>
+    This fundamental difference has two consequences:
+  </p>
+   
+  <ol>
+    <li>
+      <span class="mpstk">mpstk</span> can verify multiparty protocols
+      expressed as typing contexts (<span class="code">.ctx</span>
+      file format); as a bonus, it can also verify global types
+      (<span class="code">.global</span> file format), by projecting
+      them. Scribble, instead, has the opposite design: it is centred
+      on global types, and projections (as in the classic multiparty
+      session types theory). Therefore, it is not suited for verifying
+      protocols that cannot be projected from global types;
+    </li>
+    <li>
+      in particular, <span class="mpstk">mpstk</span> can seamlessly
+      verify <a href="#encoding-non-tailrec">higher-order and
+      non-tail-recursive types</a>, that are not supported by
+      Scribble.
+    </li>
+  </ol>
+
+  <h2 id="todo">TODOs and future work</h2>
+  
+  <ul>
+    <li>
+      mCRL2 201808.0 has a new feature: a new solver
+      (<span class="code">pbessolve</span>) that can
+      <a href="https://www.mcrl2.org/web/user_manual/tools/release/pbessolve.html">generate
+      counter-examples</a> when a specification does not satisfy a
+      given µ-calculus formula. With some work, this feature can be
+      exploited. When a typing context does <em>not</em> satisfy a
+      property, <span class="mpstk">mpstk</span> could:
+      <ol>
+        <li>
+          use <span class="code">pbessolve</span> to generate
+          the corresponding counter-example — e.g., as a labelled
+          transition system;
+        </li>
+        <li>
+          prettify the counter-example, by translating its labels (that
+          are produced by the <a href="#encoding">mCRL2 encoding</a>)
+          back into the originating typing context labels (c.f.
+          Definition 2.8 of the companion paper);
+        </li>
+        <li>
+          let <span class="mpstk">mpstk</span> users visualise the
+          prettified counter-example.
+        </li>
+      </ol>
+      This would help users understand why a multiparty protocol (expressed as a
+      global type, or typing context) does not satisfy a certain
+      property.
+    </li>
+    <li>
+      Make mCRL2 file generation and verification more efficient,
+      by reusing temporary directories and files
+      across <a href="#data-structures"><span class="code">Spec</span></a>
+      instances.
+    </li>
+    <li>
+      Improve error messages for (some cases of)
+      <span class="command">mpstk project</span>.
+    </li>
+    <li>
+      Merge the tools under a single Scala application,
+      using <a href="https://picocli.info/#_subcommands">picocli's
+      subcommands</a>.
+    </li>
+  </ul>
+
+  <h2 id="contacts">Contacts</h2>
+
+  <p>
+    For questions and enquiries, you can contact
+    the <span class="mpstk">mpstk</span> author:
+  </p>
+
+  <p>
+    <em>
+      Alceste Scalas
+      &nbsp;<span class=path>
+        &lt;alceste (dot) scalas (at) imperial (dot) ac (dot) uk&gt;
+      </span>
+    </em>
+  </p>
+
+  </div><!-- end contents -->
+  </body>
+</html>

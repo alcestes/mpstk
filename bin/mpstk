@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+# Wrapper script for launching mpstk tools
+#
+# Copyright 2018 Alceste Scalas <alceste.scalas@imperial.ac.uk>
+# Released under the MIT License: https://opensource.org/licenses/MIT
+
+# The following code for automatic rebuilding is adapted from:
+# https://github.com/lampepfl/dotty/blob/master/bin/common
+# Original license: https://github.com/lampepfl/dotty/blob/master/LICENSE.md
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" >& /dev/null && pwd)/.."
+
+# Marker file used to obtain the date of latest call to this script
+CLASSPATHFILE="$ROOT/target/CLASSPATH"
+
+# Recompile if source files have changed from last run (if any)
+NEW_FILES="$(find "$ROOT/src" \( -iname "*.scala" -o -iname "*.java" -o -iname "*.mcrl2" -o -iname "*.mcf" \) -newer "$CLASSPATHFILE" 2> /dev/null)"
+
+if [ ! -f "$CLASSPATHFILE" ] || [ ! -z "$NEW_FILES" ]; then
+  echo "The mpstk sources have changed after the last compilation. Building..."
+  (cd $ROOT && sbt package)
+  if [ $? -ne 0 ]; then
+    rm $CLASSPATHFILE # Force recompiling next time we are invoked
+    exit $?
+  fi
+fi
+
+CLASSPATH=`cat $CLASSPATHFILE`
+
+# Print some help on usage, and exit with code 1
+help_and_exit() {
+  echo "Usage: $0 <COMMAND> [OPTIONS]..."
+  echo "where <COMMAND> can be one of:"
+  echo "  * project"
+  echo "  * verify"
+  echo "Try '$0 <COMMAND> --help' for more information on a specific command"
+  exit 1
+}
+
+if [ $# -lt 1 ]; then
+    help_and_exit
+fi
+
+if [ "$1" = "project" ]; then
+    shift # Forget $1
+    java -cp $CLASSPATH mpstk.tool.Projector $@
+elif [ "$1" = "verify" ]; then
+    shift # Forget $1
+    java -cp $CLASSPATH mpstk.tool.Verifier $@
+else
+    echo "Invalid command: $1"
+    help_and_exit
+fi

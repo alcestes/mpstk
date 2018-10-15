@@ -1,0 +1,28 @@
+%%% Liveness: any pending input/output can always be eventually triggered
+%%%
+%%% Copyright 2018 Alceste Scalas <alceste.scalas@imperial.ac.uk>
+%%% Released under the MIT License: https://opensource.org/licenses/MIT
+
+nu Z.(forall s1: Session, r1,r2: Role .
+  ((exists m1: Message, p1: Payload .
+      <i(s1, r1, r2, m1, p1)>true) =>
+      mu Zi.(
+        (exists m1: Message, p1: Payload . <t(s1, r1, r2, m1, p1)>true)
+        ||
+        exists r3,r4: Role, m2: Message, p2: Payload .
+          <t(s1, r3, r4, m2, p2)>Zi
+      )
+  )
+  &&
+  (forall m1: Message, p1: Payload .
+    <o(s1, r1, r2, m1, p1)>true =>
+      mu Zi.(
+        <t(s1, r1, r2, m1, p1)>true
+        ||
+        exists r3,r4: Role, m2: Message, p2: Payload .
+          <t(s1, r3, r4, m2, p2)>Zi
+      )
+  )
+  &&
+  (forall m1: Message, p1: Payload . [t(s1, r1, r2, m1, p1)]Z)
+)

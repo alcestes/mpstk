@@ -85,10 +85,11 @@ object Projector extends Common {
           val projs = Map(cfg.roles.map(r => (r, gt.projection(r))):_*)
           
           if (projs.values.exists(_.isLeft)) {
-            val err = "Undefined projections:\n" ++ projs.foldLeft("") {
-              case (acc, (r, Left(err))) => acc ++ s" * ${r}: ${err}"
-              case (acc, (_, Right(_))) => acc
-            }
+            val err = "Undefined projections:\n" ++ (
+              projs.foldLeft(List[String]()) {
+                case (acc, (r, Left(err))) => acc :+ s" * ${r}: ${err}"
+                case (acc, (_, Right(_))) => acc
+              }.mkString("\n"))
             printError(err, false)
           } else {
             val res = cfg.roles.foldLeft(List[String]()) { (acc, r) =>

@@ -394,11 +394,31 @@
     <tr>
       <td>
         <span class="path">
+          <a href="../examples/instrument-control.ctx">instrument-control.ctx</a>
+        </span>
+      </td>
+      <td>
+        Deadlocked typing context, taken from Example 3.10 of <a href="https://doi.org/10.1145/2827695">this JACM paper</a>.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <span class="path">
+          <a href="../examples/instrument-control-fixed.global">instrument-control-fixed.global</a>
+        </span>
+      </td>
+      <td>
+        Adaptation (with bugfix) of Example 3.10 of <a href="https://doi.org/10.1145/2827695">this JACM paper</a>.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <span class="path">
           <a href="../examples/multiparty-game.global">multiparty-game.global</a>
         </span>
       </td>
       <td>
-        Running example from <a href="http://dx.doi.org/10.4230/LIPIcs.ECOOP.2017.24">an ECOOP'17 paper</a>.
+        Running example from <a href="http://dx.doi.org/10.4230/LIPIcs.ECOOP.2017.24">this ECOOP'17 paper</a>.
       </td>
     </tr>
     <tr>
@@ -535,11 +555,55 @@
         Table 2, protocol 2 (&ldquo;recursive two-buyer&rdquo;).
       </td>
     </tr>
+    <tr>
+      <td>
+        <span class="path">
+          <a href="../examples/two-buyers.global">two-buyers.global</a>
+        </span>
+      </td>
+      <td>
+        Classic two-buyer protocol from session types literature,
+        taken from <a href="https://doi.org/10.1145/1328438.1328472">this POPL'08 paper</a> (Section 3.2)
+        and <a href="https://doi.org/10.1145/2827695">this JACM paper</a> (Example 3.8).
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <span class="path">
+          <a href="../examples/streaming.global">streaming.global</a>
+        </span>
+      </td>
+      <td>
+        Simple streaming protocol
+        taken from <a href="https://doi.org/10.1145/1328438.1328472">this POPL'08 paper</a> (Section 3.2)
+        and <a href="https://doi.org/10.1145/2827695">this JACM paper</a> (Example 3.9).
+      </td>
+    </tr>
   </table>
 
   <p>
     All examples can be verified by invoking the tool as expected, e.g.:
-    &nbsp;<span class="command">./bin/mpstk verify examples/popl19-ex5.11-c.ctx</span>
+  </p>
+  
+  <div class="command">
+    ./bin/mpstk verify examples/popl19-ex5.11-c.ctx
+  </div>
+
+  <p>
+    <strong>Additionally</strong>,
+    the <span class="path"><a href="../examples-bad/">examples-bad/</a></span>
+    directory contains various global types that are <em>not</em> projectable,
+    according to Definition 3.2 in the companion paper.
+    For more details, one can invoke, e.g.:
+  </p>
+
+  <div class="command">
+    ./bin/mpstk project examples-bad/instrument-control.global
+  </div>
+
+  <p>
+    and see the resulting error messages: they show which projections
+    are not defined, and why.
   </p>
 
   <h3 id="reproducing-mu">Checking the implementation of Table 3</h3>

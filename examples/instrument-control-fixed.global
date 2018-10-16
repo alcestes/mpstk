@@ -1,0 +1,25 @@
+### Instrument control protocol.
+###
+### This global type is adapted from Example 3.10 of:
+###
+### Kohei Honda, Nobuko Yoshida, Marco Carbone.
+###   Multiparty asyncrhronous session types.
+###   JACM 63(1) 2016 - https://doi.org/10.1145/2827695
+###
+### NOTE: here we apply various fixes to make the global type projectable.
+###       For the original version, see:
+###       ../examples-bad/instrument-control.global
+###
+### Copyright 2018 Alceste Scalas <alceste.scalas @ imperial.ac.uk>
+### Released under the MIT License: https://opensource.org/licenses/MIT
+
+User→Op:privilege(int) .
+Op→User:{
+  ok . User→Instr:start .
+       μ(t)(User→Instr {
+              move . Instr→Op:busy . t,
+              photo . Instr→Op:busy . t,
+              quit . Instr→Op:status(string) . end
+            }),
+  no . User→Instr:end
+}

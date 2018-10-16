@@ -1,0 +1,36 @@
+### Instrument control protocol.
+###
+### This is taken from Example 3.10 of:
+###
+### Kohei Honda, Nobuko Yoshida, Marco Carbone.
+###   Multiparty asyncrhronous session types.
+###   JACM 63(1) 2016 - https://doi.org/10.1145/2827695
+###
+### NOTE: here we represent the intended typing context for the processes
+###       at the end of the example. It is safe, but it deadlocks: if
+###       Op answers "no" to User, then Instr will never receive any message.
+###
+### Copyright 2018 Alceste Scalas <alceste.scalas @ imperial.ac.uk>
+### Released under the MIT License: https://opensource.org/licenses/MIT
+
+s[User]: Op⊕privilege(int) .
+         Op&{
+           ok . μ(t)Instr⊕{
+                      move . t,
+                      photo . t,
+                      quit . end
+                    },
+           no . end
+         },
+
+s[Op]: User&privilege(int) .
+       User⊕{
+         ok . Instr&status(string),
+         no . end
+       },
+
+s[Instr]: μ(t)User&{
+            move . t,
+            photo . t,
+            quit . Op⊕status(string) . end
+          }

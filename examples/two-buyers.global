@@ -1,0 +1,20 @@
+### Two-buyer protocol.
+###
+### This example is taken from:
+###
+### Kohei Honda, Nobuko Yoshida, Marco Carbone.
+###   Multiparty asyncrhronous session types.
+###   POPL 2008 (Section 3.2) - https://doi.org/10.1145/1328897.1328472
+###   JACM 63(1) 2016 (Example 3.8) - https://doi.org/10.1145/2827695
+###
+### Copyright 2018 Alceste Scalas <alceste.scalas @ imperial.ac.uk>
+### Released under the MIT License: https://opensource.org/licenses/MIT
+
+B1→S:s(string) .
+S→B1:b1(int) .
+S→B2:b2(int) .
+B1→B2:bi2(int) .
+B2→S:{
+  ok . B2→S:s(string) . S→B2:b2(string) . end,
+  quit . end
+}

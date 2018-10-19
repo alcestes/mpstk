@@ -1083,12 +1083,12 @@
       the &ldquo;raw Γ&rdquo; as follows:
       <ol>
         <li>
-          it checks whether <em>p</em>'s type contains some external
+          it checks whether <em>q</em>'s type contains some external
           choice that might receive a message <em>m(S)</em>
-          from <em>q</em>;
+          from <em>p</em>;
         </li>
         <li>
-          if so, it checks whether the potential outputs of <em>q</em>
+          if so, it checks whether the potential outputs of <em>p</em>
           (i.e., the set <em>M</em> <a href="#encoding-out-msgs">above</a>)
           include some
           message <em>m(T)</em> such that <em>T⩽S</em>
@@ -1097,7 +1097,7 @@
           <a href="#data-structures">session subtyping algorithm</a>);
         </li>
         <li>
-          if so, <span class="mpstk">mpstk</span> extends <em>p</em>'s
+          if so, <span class="mpstk">mpstk</span> extends <em>q</em>'s
           external choice with a new option <em>m(T)</em>, and the
           same continuation of the original branch <em>m(S)</em>
           (this is implemented in

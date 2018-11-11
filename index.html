@@ -1,18 +1,167 @@
-<!DOCTYPE HTML>
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
-    <title>mpstk - the Multiparty Session Types toolKit</title>
+    <meta charset="UTF-8">
+    <title>Less is More: Multiparty Session Types Revisited (Artifact)</title>
+    <meta name="author" content="Alceste Scalas">
+    <meta name="keywords" content="multiparty session types,mpst,model checking,mcrl2,popl,artifact,protocol,verification,deadlock fredom,liveness">
+    <style>
+      h1,h2,h3,h4 {
+        font-family: Georgia, Times, serif;
+        padding-top: 2px;
+        padding-bottom: 2px;
+        padding-left: 0.5em;
+      }
+      h1 {
+        position: -webkit-sticky;
+        position: sticky;
+        left: 0px;
+        top: 0px;
+        height: 50px;
+        width: 98%;
+        margin-top: 0px;
+        margin-bottom: 0px;
+        margin-left: 0px;
+        margin-right: 0px;
+        padding-top: 0.3em;
+        color: #405d27;
+        background-color: #e3eaa7;
+      }
+      h2,h3 {
+        background-color: #405d27;
+        color: #ffffff;
+      }
+      h3 {
+        color: #e3eaa7;
+        display: inline;
+      }
+      h4 {
+        color: #405d27;
+        background-color: #e3eaa7;
+        display: inline;
+      }
+      body {
+        font-family: Helvetica, Arial, sans-serif;
+        background-color: #e3eaa7;
+        margin-top: 0px;
+        margin-left: 0px;
+        margin-right: 0px;
+      }
+      .path, .code, .command {
+        font-family: monospace;
+      }
+      .command {
+        font-family: monospace;
+        background-color: black;
+        color: white;
+        padding: 1px;
+      }
+      div.command {
+        margin-left: 1em;
+        margin-right: 1em;
+        padding-left: 1em;
+        padding-right: 1em;
+      }
+      span.mpstk {
+        font-family: sans-serif;
+        font-weight: bold;
+        color: #405d27;
+      }
+      div#toc{
+        float: left;
+        width: 200px;
+      }
+      div#tocbody {
+        position: fixed;
+        left: 0px;
+        top: 50px;
+        margin-left: 1em;
+        margin-right: 0px;
+      }
+      div#tocbody>ul {
+        padding-left: 0px;
+        width: 180px;
+        list-style: none;
+      }
+      div#tocbody>ul>li {
+        padding-left: 1em; 
+        text-indent: -1em;
+        margin-top: 1em;
+      }
+      div#tocbody>ul>li>a {
+        color: #405d27;
+      }
+      div#tocbody>ul>li::before {
+        content: "■ ";
+        padding-left: 0em;
+        color: #405d27;
+      }
+      div#contents {
+        margin-left: 1em;
+        margin-right: 1em;
+        padding-top: 0.5em;
+        padding-left: 1em;
+        padding-right: 1em;
+        background-color: #ffffff;        
+      }
+      p.bibref {
+        margin: auto;
+        text-align: center;
+        width: 80%;
+        padding-left: 1em;
+        padding-right: 1em;
+        background-color: #e3eaa7;
+      }
+      p#license {
+        width: 180px;
+        padding-top: 1em;
+        font-size: 80%;
+      }
+      th, td {
+        padding-left: 0.5em;
+      }
+    </style>
   </head>
+
   <body>
     <h1>mpstk - the Multiparty Session Types toolKit</h1>
+  
+    <div id="contents">
+      <p>
+        <span class="mpstk">mpstk</span> is a toolkit
+        for <strong>specifying multiparty protocols</strong>
+        and <strong>verifying their properties</strong>
+        (e.g., deadlock-freedom and liveness).
+      </p>
+      <p>
+        <span class="mpstk">mpstk</span> is based on the
+        <strong>new, generalised theory of multiparty session types</strong>
+        presented in the companion paper:
+      </p>
+      
+      <p class="bibref">
+        Alceste Scalas and Nobuko Yoshida.
+        <em><strong><a href="https://www.doc.ic.ac.uk/~ascalas/papers/scalas-yoshida-popl19.pdf">Less is More: Multiparty Session Types Revisited</a></strong></em>.
+        POPL 2019.
+      </p>
+      
+      <p>
+        This website is <strong>under construction</strong>.
+        You can refer to the following resources:
+      </p>
 
-    <p>
-      Coming soon.
-    </p>
-
-    <p>
-      For now, you can visit this
-      <a href="https://www.doc.ic.ac.uk/~ascalas/tmp/popl19/">temporary website</a>.
-    </p>
+      <ul>
+        <li>
+          the <strong><a href="https://github.com/alcestes/mpstk">source code</a></strong> on GitHub;
+        <li>
+          the <strong><a href="https://www.doc.ic.ac.uk/~ascalas/tmp/popl19/mpstk/doc/index.html">documentation</a></strong>,
+          with building and usage instructions;
+        </li>
+        <li>
+          a <a href="https://www.doc.ic.ac.uk/~ascalas/tmp/popl19/">temporary
+            website</a>, including a
+          <strong>ready-to-use virtual machine</strong>.
+      </ul>
+    </div>
   </body>
 </html>

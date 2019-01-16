@@ -7,7 +7,7 @@ mpstk is based on the **generalised theory of multiparty session
 types** presented in the companion paper:
 
 *  Alceste Scalas and Nobuko Yoshida.
-   [Less is More: Multiparty Session Types Revisited](https://doi.org/10.1145/3290343)
+   [Less is More: Multiparty Session Types Revisited](https://doi.org/10.1145/3290343).
    POPL 2019.
 
 For details and documentation, please visit the home page of the tool:
